@@ -3,6 +3,7 @@ import type { AWS } from '@serverless/typescript';
 import hello from '@functions/hello';
 import createTask from '@functions/createTask';
 import getTaskById from '@functions/getTaskById';
+import updateTask from '@functions/updateTask';
 
 const serverlessConfiguration: AWS = {
 	service: 'aws-serverless-typescript-api',
@@ -40,7 +41,7 @@ const serverlessConfiguration: AWS = {
 			},
 		},
 	},
-	functions: { hello, createTask, getTaskById },
+	functions: { hello, createTask, getTaskById, updateTask },
 	package: { individually: true },
 	custom: {
 		esbuild: {
