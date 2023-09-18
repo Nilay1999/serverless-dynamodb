@@ -1,4 +1,4 @@
-export default {
+export const createTask = {
 	type: 'object',
 	properties: {
 		taskId: { type: 'string' },
@@ -7,4 +7,12 @@ export default {
 		estimatedTime: { type: 'string' },
 	},
 	required: ['taskId', 'description', 'assignedTo', 'estimatedTime'],
-} as const;
+};
+
+export const updateTask = {
+	type: 'object',
+	properties: {
+		status: { type: 'string' },
+	},
+	required: ['status'],
+};

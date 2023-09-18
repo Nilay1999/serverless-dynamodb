@@ -1,9 +1,12 @@
 import type { AWS } from '@serverless/typescript';
 
 import hello from '@functions/hello';
-import createTask from '@functions/createTask';
-import getTaskById from '@functions/getTaskById';
-import updateTask from '@functions/updateTask';
+import { getTaskById, createTask, updateTask } from '@functions/task';
+import {
+	createProject,
+	getProjectById,
+	getTasksByProject,
+} from '@functions/project';
 
 const serverlessConfiguration: AWS = {
 	service: 'aws-serverless-typescript-api',
@@ -35,13 +38,24 @@ const serverlessConfiguration: AWS = {
 							'dynamodb:UpdateItem',
 							'dynamodb:DeleteItem',
 						],
-						Resource: 'arn:aws:dynamodb:ap-south-1:*:table/Tasks',
+						Resource: [
+							'arn:aws:dynamodb:ap-south-1:*:table/Tasks',
+							'arn:aws:dynamodb:ap-south-1:*:table/Projects',
+						],
 					},
 				],
 			},
 		},
 	},
-	functions: { hello, createTask, getTaskById, updateTask },
+	functions: {
+		hello,
+		createTask,
+		getTaskById,
+		updateTask,
+		createProject,
+		getProjectById,
+		getTasksByProject,
+	},
 	package: { individually: true },
 	custom: {
 		esbuild: {
@@ -57,6 +71,22 @@ const serverlessConfiguration: AWS = {
 	},
 	resources: {
 		Resources: {
+			Projects: {
+				Type: 'AWS::DynamoDB::Table',
+				Properties: {
+					TableName: 'Projects',
+					KeySchema: [
+						{ AttributeName: 'projectId', KeyType: 'HASH' },
+					],
+					AttributeDefinitions: [
+						{ AttributeName: 'projectId', AttributeType: 'N' },
+					],
+					ProvisionedThroughput: {
+						ReadCapacityUnits: 5,
+						WriteCapacityUnits: 5,
+					},
+				},
+			},
 			Tasks: {
 				Type: 'AWS::DynamoDB::Table',
 				Properties: {
