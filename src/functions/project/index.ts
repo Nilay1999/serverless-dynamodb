@@ -1,5 +1,8 @@
 import { handlerPath } from '@libs/handler-resolver';
-import { createProject as createProjectSchema } from './schema';
+import {
+	createProject as createProjectSchema,
+	getTasksByProjectId as getProjectByIdSchema,
+} from './schema';
 
 export const createProject = {
 	handler: `${handlerPath(__dirname)}/handler.createProject`,
@@ -7,7 +10,7 @@ export const createProject = {
 		{
 			http: {
 				method: 'post',
-				path: 'createTask',
+				path: 'createProject',
 				request: {
 					schemas: {
 						'application/json': createProjectSchema,
@@ -35,8 +38,13 @@ export const getTasksByProject = {
 	events: [
 		{
 			http: {
-				method: 'get',
+				method: 'post',
 				path: 'getTasksByProject',
+				request: {
+					schemas: {
+						'application/json': getProjectByIdSchema,
+					},
+				},
 			},
 		},
 	],

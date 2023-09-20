@@ -4,22 +4,25 @@ import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 
 export const createProject = middyfy(async (event) => {
 	const client = new DocumentClient();
-	const data = await client
+	const { body } = event;
+	const { projectId, name } = body;
+	await client
 		.put({
 			TableName: 'Projects',
 			Item: {
-				projectId: event.body.id,
-				name: event.body.name,
+				projectId: projectId,
+				name: name,
 				createdAt: Date.now(),
 				updatedAt: Date.now(),
 			},
-			ReturnValues: 'ALL_NEW',
 		})
-		.promise();
+		.promise()
+		.catch((e) => {
+			console.log(e);
+		});
 
 	return formatJSONResponse({
-		message: `Task created successfully`,
-		data: data,
+		message: `Project created successfully`,
 	});
 });
 
@@ -42,11 +45,12 @@ export const getProjectById = middyfy(async (event) => {
 
 export const getTasksByProject = middyfy(async (event) => {
 	const client = new DocumentClient();
+	console.log(event);
 	const data = await client
 		.query({
 			TableName: 'Tasks',
 			KeyConditions: {
-				projectId: event.queryStringParameters.projectId,
+				projectId: event.body.projectId,
 			},
 		})
 		.promise();

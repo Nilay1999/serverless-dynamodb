@@ -5,8 +5,15 @@ export const createTask = {
 		description: { type: 'string' },
 		assignedTo: { type: 'string' },
 		estimatedTime: { type: 'string' },
+		projectId: { type: 'number' },
 	},
-	required: ['taskId', 'description', 'assignedTo', 'estimatedTime'],
+	required: [
+		'taskId',
+		'description',
+		'assignedTo',
+		'estimatedTime',
+		'projectId',
+	],
 };
 
 export const updateTask = {

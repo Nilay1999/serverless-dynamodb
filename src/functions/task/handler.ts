@@ -36,7 +36,6 @@ export const createTask = middyfy(async (event) => {
 				updatedAt: Date.now(),
 				projectId: projectId,
 			},
-			ReturnValues: 'ALL_NEW',
 		})
 		.promise();
 
