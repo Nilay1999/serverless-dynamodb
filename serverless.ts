@@ -1,5 +1,6 @@
 import { AWS } from '@serverless/typescript';
 import { createUserLambda, getUserLambda } from '@functions/user';
+import { createPostLambda, getPostLambda } from '@functions/post';
 
 const serverlessConfiguration: AWS = {
   service: 'step-functions-dynamoDB',
@@ -29,16 +30,16 @@ const serverlessConfiguration: AWS = {
             "dynamodb:GetItem",
             "dynamodb:PutItem",
             "dynamodb:UpdateItem",
-            "dynamodb:DeleteItem",
+            "dynamodb:DeleteItem"
           ],
-          Resource: ["arn:aws:dynamodb:ap-south-1:*:table/Users"],
+          Resource: ["arn:aws:dynamodb:ap-south-1:*:table/Users", "arn:aws:dynamodb:ap-south-1:*:table/Posts"],
         }],
       },
     },
   },
 
   // import the function via paths
-  functions: { createUserLambda, getUserLambda },
+  functions: { createUserLambda, getUserLambda, createPostLambda, getPostLambda },
   package: { individually: true },
   custom: {
     esbuild: {
@@ -64,6 +65,24 @@ const serverlessConfiguration: AWS = {
           }],
           KeySchema: [{
             AttributeName: "userId",
+            KeyType: "HASH"
+          }],
+          ProvisionedThroughput: {
+            ReadCapacityUnits: 1,
+            WriteCapacityUnits: 1
+          },
+        }
+      },
+      Posts: {
+        Type: "AWS::DynamoDB::Table",
+        Properties: {
+          TableName: "Posts",
+          AttributeDefinitions: [{
+            AttributeName: "postId",
+            AttributeType: "S",
+          }],
+          KeySchema: [{
+            AttributeName: "postId",
             KeyType: "HASH"
           }],
           ProvisionedThroughput: {
